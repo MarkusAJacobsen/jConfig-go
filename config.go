@@ -1,4 +1,4 @@
-package JSONConfig
+package jConfigGo
 
 import (
 	"encoding/json"
