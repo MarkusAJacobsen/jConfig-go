@@ -17,7 +17,13 @@ type Config struct {
 
 
 func (c *Config) CreateConfig(fileName string) (err error){
-	fileName = fileName + jsonMime
+	if !strings.Contains(fileName, jsonMime) {
+		fileName = fileName + jsonMime
+	}
+
+	if err = c.Open(fileName); err == nil {
+		return
+	}
 
 	f, err := os.Create(fileName)
 	if err != nil {

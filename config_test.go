@@ -111,6 +111,22 @@ func TestConfig(t *testing.T) {
 		})
 	})
 
+	t.Run("should open old file with values intact", func(t *testing.T) {
+		conf3 := Config{}
+
+		conf3.CreateConfig("testData")
+
+		data := &testData{}
+
+		if err := conf3.Get(&data); err != nil {
+			t.Error("Received error: ", err)
+		}
+
+		if data.TestInt != 321 {
+			t.Error("Old file truncated")
+		}
+	})
+
 	if err := os.Remove(conf.fileName); err != nil {
 		t.Error("Could not delete testData.json, manual actions required")
 	}
