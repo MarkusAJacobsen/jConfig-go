@@ -2,8 +2,10 @@ package JSONConfig
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 const jsonMime = ".json"
@@ -30,6 +32,11 @@ func (c *Config) CreateConfig(fileName string) (err error){
 }
 
 func (c *Config) Open(fileName string) (err error){
+	if !strings.Contains(fileName, jsonMime) {
+		err = errors.New("File extension is not of type json")
+		return
+	}
+
 	f, err := os.Open(fileName)
 	if err != nil {
 		return

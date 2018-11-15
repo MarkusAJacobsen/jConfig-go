@@ -1,7 +1,6 @@
 package JSONConfig
 
 import (
-	"github.com/Sirupsen/logrus"
 	"os"
 	"testing"
 )
@@ -27,7 +26,7 @@ func TestConfig(t *testing.T) {
 	t.Run("should create", func(t *testing.T) {
 		err := conf.CreateConfig("testData")
 		if err != nil {
-			logrus.Error(err)
+			t.Error("Received error: ", err)
 		}
 
 		if conf.fileName != "testData.json" {
@@ -86,6 +85,30 @@ func TestConfig(t *testing.T) {
 		if err := conf.Open("testData.json"); err != nil {
 			t.Error("Could not open existing config")
 		}
+	})
+
+	t.Run("Should reject files which are not json", func(t *testing.T) {
+		conf2 := Config{}
+
+		t.Run("Wrong extension", func(t *testing.T) {
+			err := conf2.Open("testData.png")
+			if err == nil {
+				t.Error("Error expected: ", err)
+			}
+			if err.Error() != "File extension is not of type json" {
+				t.Error(err)
+			}
+		})
+
+		t.Run("Empty extension", func(t *testing.T) {
+			err := conf2.Open("testData")
+			if err == nil {
+				t.Error("Error expected: ", err)
+			}
+			if err.Error() != "File extension is not of type json" {
+				t.Error(err)
+			}
+		})
 	})
 
 	if err := os.Remove(conf.fileName); err != nil {
